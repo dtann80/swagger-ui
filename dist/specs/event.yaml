@@ -1,0 +1,19 @@
+ BaseEvent:
+  type: object
+  properties:
+    source:
+      type: string
+    type:
+      type: string
+    os:
+      type: string
+    app_version:
+      type: string
+    build_number:
+      type: string
+    device_id:
+      type: string
+    session_id:
+      type: string
+    client_ts:
+      type: string

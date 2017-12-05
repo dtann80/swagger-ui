@@ -1,0 +1,108 @@
+openapi: 3.0.0
+info:
+  title: Data Guide 2.0
+  description: Data guide using swagger
+  version: 0.1.9
+
+
+components:
+  schemas:
+    User:       # Schema name
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      examplessdsd:   # Object-level example
+          id: 10
+          name: Jessica Smith
+    Event:
+     allOf:
+        - $ref: "event.yaml#/BaseEvent"
+        - type: object
+          description: This is a base event that is included in all events
+    VideoEvent:
+      allOf:
+        - $ref: "event.yaml#/BaseEvent"
+        - type: object
+          required:
+            - content_id
+          properties:
+            content_id:
+              type: string
+              description: >-
+                Unique platform ID for that piece of content; for native videos,
+                this is the video_id
+            content_type:
+              type: string
+              description: >-
+                Denotes the type of content and identifies what type of id is
+                sent in content_id; for native videos, this is "video"
+            action:
+              type: string
+              $ref: '#/components/schemas/Action'
+            reason:
+              type: string
+              $ref: '#/components/schemas/Reason'
+            position:
+              type: integer
+              description: Position of object within a unit
+            video_ts:
+              type: integer
+              description: Playback time in video in milliseconds at which event occurred
+            orientation:
+              type: string
+              description: >-
+                Orientation of the video player at the time when the event
+                occurs; for rotation events, this is the orientation at the time
+                that the rotation commences.
+            player_location:
+              type: string
+              description: >-
+                Records the state of the video player; possible values are
+                "in_feed","media_viewer"
+            screen:
+              type: string
+              description: >-
+                Name of screen which user is on when event fires; follows naming
+                convention "/post/$username/$uri",
+                "/list/$feed_path/$feed_edition", "/author/$username" (for
+                author pages), "/list/show/$show_name" (for show pages)
+            show_id:
+              type: string
+              nullable: true
+              description: >-
+                Unique ID of the show to which the video belongs to; null if the
+                video does not belong to a show
+            show_name:
+              type: string
+              nullable: true
+              description: >-
+                Name of the show to which the video belongs to; null if the
+                video does not belong to a show
+    Action:
+      type: string
+      description: |
+        Notes:
+         * tap_player_controls is used when tapping resume in the MediaViewer (iOS + Android), or indicating that a user tapped to play a video in a feed (iOS only). 
+         * tap_to_play_auto is Android-specific and should be used when playback begins upon entering the MediaViewer from an auto-playing feed.
+      enum:
+        - play
+        - pause
+        - scrub_start
+        - scrub_end
+        - enter_media_viewer
+        - close_media_viewer
+        - enter_portrait
+        - enter_landscape
+    Reason:
+      type: string
+      enum:
+        - auto
+        - video_loop
+        - scrub_end
+        - tap_player_controls
+        - tap_to_play_auto
+        - video_complete
+        - scrub_start
